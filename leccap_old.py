@@ -1,35 +1,25 @@
 #!/usr/bin/python
 
 """
-get-lec.py
+University Of Michigan Lecture Videos Downloader 
 
-Maxim Aleksa
-maximal@umich.edu
+@Author: Maxim Aleksa maximal@umich.edu
+@Modified By: Jackie Zhang jackierw@umich.edu
+@Version: 2.0
 
-Downloads lectures for a course.
-
-Usage: ./dleccap.py
+Usage: 
+leccap dl url [-p --path]
+leccap forget [logins|path|concurrency|all]
+leccap config [login.username|login.password|concurrecy] [$value]
 """
 
-# command-line arguments
-import argparse
-# HTTP stuff
-# import cookielib
-# import urllib
-# import urllib2
-import requests
-# import json
-import json
-# file system access
 import os
-# I/O
 import sys
-# file downloads
 import wget
-# password input
+import json
+import argparse
+import requests
 from getpass import getpass
-# parsing HTML
-# pip install beautifulsoup4
 from bs4 import BeautifulSoup
 
 # globals
@@ -89,7 +79,6 @@ def authenticate_for(service, username, password):
     # authenticate
     p = session.post(authentication_url, data_to_post)
 
-
 """
 Gets leccap cookie via CTools.
 Returns site ID.
@@ -131,7 +120,6 @@ def get_cookie_and_site_id_from_ctools(url):
     except:
         return None
 
-
 """
 Gets leccap cookie via Canvas.
 Returns site ID.
@@ -172,7 +160,6 @@ def get_cookie_and_site_id_from_canvas(url):
     except:
         return None
 
-
 """
 Gets username and password from user.
 """
@@ -189,7 +176,6 @@ def authenticate(service=None):
             authenticate_for(service, username, password)
     else:
         authenticate_for(service, username, password)
-
 
 """
 Gets information about a recording from its ID.
@@ -212,7 +198,6 @@ def get_recording_from_id(recording_id):
         print r.text
         return None
 
-
 """
 Returns site ID of a recording viewable at specified URL.
 """
@@ -225,7 +210,6 @@ def get_site_id_from_view_url(url):
         return None
     else:
         return recording["sitekey"]
-
 
 """
 Parses url and retrieves ID of the recordings site.
@@ -258,7 +242,6 @@ def get_site_id(url):
     else:
         return None
 
-
 """
 Gets recordings for a site with the specified ID.
 """
@@ -278,7 +261,6 @@ def get_recordings_for_site(site_id):
         return recordings
     except:
         return None
-
 
 def download_recoding(recording, dest_folder=None):
     # construct url
