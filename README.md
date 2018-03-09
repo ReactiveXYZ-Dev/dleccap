@@ -17,7 +17,8 @@ Download CAEN and LSA-ISS Lecture recordings. Boosted.
 ```sh
 cd $DOWNLOADED_DIR
 pip install -r requirements.txt
-python leccap/leccap.py $CMD
+cd leccap
+python leccap.py $CMD
 ```
 or
 
@@ -28,7 +29,7 @@ leccap $CMD
 ```
 
 ## API 
-**demo using pip installed version. use `python leccap/leccap.py` for cloned version**
+**demo using pip installed version. use `python leccap.py` for cloned version**
 
 #### Download lecture
 ```sh
