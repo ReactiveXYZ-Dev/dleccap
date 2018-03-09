@@ -39,15 +39,15 @@ def download(config, url):
             print_info("Using saved credentials...")
             auth.ask_for_credentials(username=username, password=password)
         else:
-            print_info("Needs authentication. But you can save your credentials using ./leccap config! ")
+            print_warning("Needs authentication. But you can save your credentials using ./leccap config! ")
             auth.ask_for_credentials()
         downloader.set_auth(auth)
         if not downloader.get_auth().is_authenticated():
+            print_info("Authenticating...")
             downloader.get_auth().authenticate()
             print_success("Authenticated!")
     # start download
     downloader.start()
-    pass
 
 def reset_config(config, key):
     if key == 'all':

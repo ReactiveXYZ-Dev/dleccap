@@ -48,9 +48,12 @@ class Downloader:
             """
             Print the progress in console
             """
-            line = ""
+            current = 0
+            total = 0
             for title, data in status.items():
-                line = line + "%s: %3d/%d \t" % (title, data['current'], data['total'])
+                current += data['current']
+                total += data['total']
+            line = "%s / %s bytes (%s recording(s)) downloaded" % (current, total, len(status))
             sys.stdout.write("\r" + line)
             sys.stdout.flush()
     
@@ -178,14 +181,33 @@ class Downloader:
                 break
 
     def _download_site(self):
-        # TODO
-        pass
-
+        # extract site id
+        site_id = self._url.split('/')[-1]
+        # fetch data from api
+        res = self._authenticator.session().get("%s?sk=%s" % (API_BASE_URL, site_id))
+        recordings = json.loads(res.text)
+        # show list of downloadable recordings
+        print_info("%i recording%s available:" % (
+            len(recordings), ("s" if (len(recordings) != 1) else "")))
+        # print lecture info
+        for idx, recording in enumerate(recordings):
+            print "%i\t(%s)\t%s" % (
+                idx + 1, recording["date"], recording["title"])
+        # prompt user to select
+        prompt = print_info("Please select one or more comma separated, e.g 1,3,5. Or simply enter to download all of them: ", True)
+        ans = raw_input(prompt)
+        if ans == '':
+            to_dl = recordings
+        else:
+            to_dl = [ recordings[int(i)-1] for i in ans.split(',') ]
+        # download the recordings
+        self._download_with_thread(to_dl)
+        
     def _download_with_thread(self, recordings):       
         # split recordings into batch of concurrencies
-        batches = list(chunks(recordings, self._concurrency))
+        batches = list(chunks(recordings, int(self._concurrency)))
         for batch_idx, batch in enumerate(batches):
-            print_info("Start downloading batch %s: " % (batch_idx + 1))
+            print_info("Start downloading batch %s ... " % (batch_idx + 1))
             # load a batch
             tasks = []
             msg_queue = Queue()
@@ -208,6 +230,7 @@ class Downloader:
             # wait for all of them to finish
             for t in tasks:
                 t.join()
+            print '' # for new line
         print_success("All done! Enjoy!")
 
     def _is_recording_url(self, url):
