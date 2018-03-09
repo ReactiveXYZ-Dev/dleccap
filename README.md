@@ -37,6 +37,7 @@ leccap dl $url
 where url is in form of either: 
 https://leccap.engin.umich.edu/leccap/site/XXX to download multiple recordings from a course site or
 https://leccap.engin.umich.edu/leccap/viewer/r/XXX to download a single recording
+
 **Removed canvas/ctools support since they seems deprecated, if you want to have those, shoot me an email :)**
 
 #### Configuration
@@ -49,10 +50,14 @@ leccap config $key $value
  leccap reset $key
 ```
 where `$key` can be any one of :
+
 `logins.username` (umich uniqname)
- `logins.password` (umich password)
- `concurreny` (number of downloads at once, default to 5) 
- `dest_path` (destination download **full** path, default to current directory)
+
+`logins.password` (umich password)
+
+`concurreny` (number of downloads at once, default to 5) 
+
+`dest_path` (destination download **full** path, default to current directory)
  
  ### Development
  Please post a github issue or pull request if you see bugs :)
