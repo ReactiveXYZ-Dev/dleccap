@@ -12,17 +12,48 @@ def init_terminal():
     """
     init()
 
-def print_success(text):
+def print_info(text, ret=False):
+    s = Fore.CYAN + text
+    s += Style.RESET_ALL
+    if ret:
+        return s
+    else:
+        print s
+
+def print_success(text, ret=False):
     s = Fore.GREEN + text
     s += Style.RESET_ALL
-    print s
+    if ret:
+        return s
+    else:
+        print s
 
-def print_error(text):
+def print_error(text, ret=False):
     s = Fore.RED + text
     s += Style.RESET_ALL
-    print s
+    if ret:
+        return s
+    else:
+        print s
 
-def print_warning(text):
+def print_warning(text, ret=False):
     s = Fore.YELLOW + text
     s += Style.RESET_ALL
-    print s
+    if ret:
+        return s
+    else:
+        print s
+
+def chunks(l, n):
+    """
+    Slice list into chunks
+    
+    Arguments:
+        l {list}
+        n {int} -- Num items per chunk
+    """
+
+    # For item i in a range that is a length of l,
+    for i in range(0, len(l), n):
+        # Create an index range for l of n items:
+        yield l[i:i+n]
