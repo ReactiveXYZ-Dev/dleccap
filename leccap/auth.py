@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from builtins import input
+from builtins import object
 import os
 import sys
 import json
@@ -11,7 +14,7 @@ Lecture authentication procedures
 
 @Version 2.0.0
 """
-class Authenticator:
+class Authenticator(object):
 
     def __init__(self):
         """
@@ -53,7 +56,7 @@ class Authenticator:
             self._password = password
         else:
             # ask for raw input
-            self._username = raw_input("Your uniqname: ")
+            self._username = input("Your uniqname: ")
             self._password = getpass("Your password: ")       
 
     def is_authenticated(self):

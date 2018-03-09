@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import range
 from colorama import init, Fore, Style
 
 """
@@ -18,7 +20,7 @@ def print_info(text, ret=False):
     if ret:
         return s
     else:
-        print s
+        print(s)
 
 def print_success(text, ret=False):
     s = Fore.GREEN + text
@@ -26,7 +28,7 @@ def print_success(text, ret=False):
     if ret:
         return s
     else:
-        print s
+        print(s)
 
 def print_error(text, ret=False):
     s = Fore.RED + text
@@ -34,7 +36,7 @@ def print_error(text, ret=False):
     if ret:
         return s
     else:
-        print s
+        print(s)
 
 def print_warning(text, ret=False):
     s = Fore.YELLOW + text
@@ -42,7 +44,7 @@ def print_warning(text, ret=False):
     if ret:
         return s
     else:
-        print s
+        print(s)
 
 def chunks(l, n):
     """

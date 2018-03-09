@@ -1,3 +1,4 @@
+from builtins import object
 import os
 import json
 
@@ -6,7 +7,7 @@ Simple JSON based config manager
 
 @Version: 2.0
 """
-class ConfigParser:
+class ConfigParser(object):
 
     def __init__(self):
         """

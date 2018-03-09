@@ -1,10 +1,16 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import input
+from builtins import object
 import os
 import sys
 import wget
 import json
 import time
 import threading
-from Queue import Queue
+from queue import Queue
 from utils import *
 from constants import *
 
@@ -13,7 +19,7 @@ Lecture download procedures
 
 @Version 2.0.0
 """
-class Downloader:
+class Downloader(object):
     
     class ProgressReporter(threading.Thread):
         """
@@ -50,7 +56,7 @@ class Downloader:
             """
             current = 0
             total = 0
-            for title, data in status.items():
+            for title, data in list(status.items()):
                 current += data['current']
                 total += data['total']
             line = "%s / %s bytes (%s recording(s)) downloaded" % (current, total, len(status))
@@ -191,11 +197,11 @@ class Downloader:
             len(recordings), ("s" if (len(recordings) != 1) else "")))
         # print lecture info
         for idx, recording in enumerate(recordings):
-            print "%i\t(%s)\t%s" % (
-                idx + 1, recording["date"], recording["title"])
+            print("%i\t(%s)\t%s" % (
+                idx + 1, recording["date"], recording["title"]))
         # prompt user to select
         prompt = print_info("Please select one or more comma separated, e.g 1,3,5. Or simply enter to download all of them: ", True)
-        ans = raw_input(prompt)
+        ans = input(prompt)
         if ans == '':
             to_dl = recordings
         else:
@@ -230,7 +236,7 @@ class Downloader:
             # wait for all of them to finish
             for t in tasks:
                 t.join()
-            print '' # for new line
+            print('') # for new line
         print_success("All done! Enjoy!")
 
     def _is_recording_url(self, url):
