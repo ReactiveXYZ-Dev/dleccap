@@ -1,3 +1,4 @@
+import os
 import json
 
 """
@@ -11,7 +12,8 @@ class ConfigParser:
         """
         Read config dict from file
         """
-        with open("./config.json") as f:
+        self._json_path = os.path.join(os.path.dirname(__file__), 'config.json')
+        with open(self._json_path) as f:
             self._config = json.load(f)
     
     def get(self, key):
@@ -40,7 +42,7 @@ class ConfigParser:
         """
         Dump back to the file
         """
-        with open("./config.json", 'w') as f:
+        with open(self._json_path, 'w') as f:
             json.dump(self._config, f)
 
     """

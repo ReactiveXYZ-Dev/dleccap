@@ -24,9 +24,9 @@ def download(config, url):
     # extract dest path
     dest_path = config.get('dest_path')
     if dest_path == '.':
-        dest_path = os.getcwd()
+        dest_path = os.path.dirname(__file__)
     downloader = Downloader(url, dest_path)
-    # set concurrency
+    # set concurrency``
     concurrency = config.get('concurrency')
     downloader.set_concurrency(concurrency)
     # check authentication
@@ -45,7 +45,6 @@ def download(config, url):
         if not downloader.get_auth().is_authenticated():
             print_info("Authenticating...")
             downloader.get_auth().authenticate()
-            print_success("Authenticated!")
     # start download
     downloader.start()
 

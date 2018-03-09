@@ -10,4 +10,6 @@ setup(
     keywords=['leccap', 'downloader', 'lecture', 'umich'],
     license="CC0",
     classifiers=["Programming Language :: Python :: 2"],
+    scripts=['bin/leccap'],
+    include_package_data=True
 )

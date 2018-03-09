@@ -246,6 +246,6 @@ class Downloader:
                                      recording["info"]["movie_type"])
     
     def _construct_recording_title(self, idx, recording):
-        title = recording['title'].replace('[',"").replace(']',"")
+        title = recording['title'].replace('[',"").replace(']',"").replace('/', "-")
         ext = recording['info']['movie_type']
         return "%s-%s.%s" % (idx, title, ext)
