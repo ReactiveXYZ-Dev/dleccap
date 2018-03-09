@@ -22,7 +22,7 @@ python leccap.py $CMD
 ```
 or
 
-### through pip (Not yet...)
+### through pip (Not yet supported...)
 ```sh
 pip install leccap
 leccap $CMD
@@ -56,11 +56,11 @@ where `$key` can be any one of :
 
 `logins.password` (umich password)
 
-`concurreny` (number of downloads at once, default to 5) 
+`concurrency` (number of downloads at once, default to 5, not recommending 10+, unless you live in a data center with 10Gbps ethernet.) 
 
 `dest_path` (destination download **full** path, default to current directory)
 
-`all` (everything)
+`all` (everything, for **reset only**)
  
  ### Development
  Please post a github issue or pull request if you see bugs :)
