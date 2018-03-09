@@ -58,6 +58,8 @@ where `$key` can be any one of :
 `concurreny` (number of downloads at once, default to 5) 
 
 `dest_path` (destination download **full** path, default to current directory)
+
+`all` (everything)
  
  ### Development
  Please post a github issue or pull request if you see bugs :)
