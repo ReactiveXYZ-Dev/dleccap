@@ -1,43 +1,60 @@
-# dleccap
-Download CAEN and LSA-ISS Lecture recordings
+# leccap
+Download CAEN and LSA-ISS Lecture recordings. Boosted.
+
+**Credits to [Maxim Aleska](https://github.com/maxim123/dleccap) for his great work :)**
+
+## New features
+* **Concurrent download** !!
+* Concurrency and destination folder configurable
+
+## Updates
+* Major code rewritten, pretty much everything
+* Got rid of some old dependencies
 
 ## Installation
 
-* Download `dleccap.py` or clone the repository with
+### clone and run
+```sh
+python leccap/leccap.py $CMD
+```
+or
 
-  ```
-  git clone https://github.com/maxim123/dleccap.git
-  ```
+### through pip (Not yet...)
+```sh
+pip install leccap
+leccap $CMD
+```
 
+## API 
+**demo using pip installed version. use `python leccap/leccap.py` for cloned version**
 
-* Install dependencies
+#### Download lecture
+```sh
+leccap dl $url
+```
+where url is in form of either: 
+https://leccap.engin.umich.edu/leccap/site/XXX to download multiple recordings from a course site or
+https://leccap.engin.umich.edu/leccap/viewer/r/XXX to download a single recording
+**Removed canvas/ctools support since they seems deprecated, if you want to have those, shoot me an email :)**
 
-  ```
-  pip install requests
-  pip install wget
-  pip install beautifulsoup4
-  ```
+#### Configuration
+##### Update config
+```sh
+leccap config $key $value
+```
+##### Reset config
+ ```sh
+ leccap reset $key
+```
+where `$key` can be any one of :
+`logins.username` (umich uniqname)
+ `logins.password` (umich password)
+ `concurreny` (number of downloads at once, default to 5) 
+ `dest_path` (destination download **full** path, default to current directory)
+ 
+ ### Development
+ Please post a github issue or pull request if you see bugs :)
 
-## Usage
-
-* Run with
-
-  ```
-  python dleccap.py
-  ```
-
-* When asked to input the URL of the recordings site, enter the URL of the Lecture Recordings page on CTools if the access to recordings is restricted to a CTools site. The URL should look like
-
-  ```
-  https://ctools.umich.edu/portal/site/123/page/456
-  ```
-  
-* Otherwise, enter the URL of *any* recording in the series, or the URL of the recordings site, in any of these formats:
-
-  ```
-  https://leccap.engin.umich.edu/leccap/site/123 or
-  https://leccap.engin.umich.edu/leccap/viewer/r/123 or
-  https://leccap.engin.umich.edu/leccap/viewer/s/123
-  ```
-
-* Support for recordings published to Canvas sites coming in the future!
+ #### TODOs
+ * Python 3 support
+ * pip support
