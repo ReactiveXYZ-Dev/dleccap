@@ -66,5 +66,4 @@ where `$key` can be any one of :
  Please post a github issue or pull request if you see bugs :)
 
  #### TODOs
- * Python 3 support
  * pip support
