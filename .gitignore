@@ -63,3 +63,6 @@ target/
 
 # editor
 .vscode/
+
+# Pypi
+.pypirc
