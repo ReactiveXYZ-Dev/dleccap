@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from .config import ConfigParser
+from config import ConfigParser
 
 def test_config():
     c = ConfigParser()
