@@ -5,9 +5,9 @@ import os
 import sys
 import json
 import requests
-from utils import *
-from constants import *
 from getpass import getpass
+from .utils import *
+from .constants import *
 
 """
 Lecture authentication procedures

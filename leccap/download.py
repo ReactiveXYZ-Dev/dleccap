@@ -11,8 +11,8 @@ import json
 import time
 import threading
 from queue import Queue
-from utils import *
-from constants import *
+from .utils import *
+from .constants import *
 
 """
 Lecture download procedures
@@ -59,8 +59,17 @@ class Downloader(object):
             for title, data in list(status.items()):
                 current += data['current']
                 total += data['total']
-            line = "%s / %s bytes (%s recording(s)) downloaded" % (current, total, len(status))
-            sys.stdout.write("\r" + line)
+            line = "%s / %s bytes (%s recording(s)) in progress" % (current, total, len(status))
+            self._print_message(print_info(line, True))
+        
+        def _print_message(self, msg):
+            """
+            Print message using stdout
+            
+            Arguments:
+                msg {str}
+            """
+            sys.stdout.write("\r" + msg)
             sys.stdout.flush()
     
     class Task(threading.Thread):

@@ -5,31 +5,31 @@ Download CAEN and LSA-ISS Lecture recordings. Boosted.
 
 ## New features
 * **Concurrent download** !!
-* Concurrency and destination folder configurable
+* Concurrency and destination folder are configurable
+* Python 3 support
 
 ## Updates
 * Major code rewritten, pretty much everything
-* Got rid of some old dependencies
+* Got rid of some unnecessary dependencies
 
 ## Installation
 
-### clone and run
+### download and run
 ```sh
-cd $DOWNLOADED_DIR
+cd PATH_TO_DOWNLOADED
 pip install -r requirements.txt
-cd leccap
-python leccap.py $CMD
+python leccap.py COMMANDS
 ```
 or
 
-### through pip (Not yet supported...)
+### through pip
 ```sh
 pip install leccap
-leccap $CMD
+leccap COMMANDS
 ```
 
-## API 
-**demo using pip installed version. use `python leccap.py` for cloned version**
+## Usage 
+**demo using pip installed version. use `python leccap.py` for downloaded version.**
 
 #### Download lecture
 ```sh
@@ -66,5 +66,4 @@ where `$key` can be any one of :
  Please post a github issue or pull request if you see bugs :)
 
  #### TODOs
- * better conconcurrency scheduling
- * pip support
+ * Better task scheduling method

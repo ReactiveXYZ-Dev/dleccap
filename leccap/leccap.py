@@ -2,11 +2,11 @@
 from __future__ import absolute_import
 import os
 import sys
-from utils import *
-from constants import *
-from auth import Authenticator
-from config import ConfigParser
-from download import Downloader
+from .utils import *
+from .constants import *
+from .auth import Authenticator
+from .config import ConfigParser
+from .download import Downloader
 
 """
 University Of Michigan Lecture Videos Downloader 
@@ -25,7 +25,7 @@ def download(config, url):
     # extract dest path
     dest_path = config.get('dest_path')
     if dest_path == '.':
-        dest_path = os.path.dirname(__file__)
+        dest_path = os.getcwd()
     downloader = Downloader(url, dest_path)
     # set concurrency``
     concurrency = config.get('concurrency')
