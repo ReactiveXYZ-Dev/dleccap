@@ -66,4 +66,5 @@ where `$key` can be any one of :
  Please post a github issue or pull request if you see bugs :)
 
  #### TODOs
+ * Search for recording without need to enter url
  * Better task scheduling method
