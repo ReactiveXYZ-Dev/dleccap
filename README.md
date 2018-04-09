@@ -31,6 +31,14 @@ leccap COMMANDS
 ## Usage 
 **demo using pip installed version. use `python leccap.py` for downloaded version.**
 
+#### Search lecture
+```sh
+leccap search $class $year?
+```
+where class can be a normal catelog number such as ***eecs281***. 
+
+year is optional, default to current year, or enter one to download past lectures.
+
 #### Download lecture
 ```sh
 leccap dl $url
@@ -63,8 +71,7 @@ where `$key` can be any one of :
 `all` (everything, for **reset only**)
  
  ### Development
- Please post a github issue or pull request if you see bugs :)
+ Please post a issue or pull request if you see bugs :)
 
  #### TODOs
- * Search for recording without need to enter url
- * Better task scheduling method
+ * Better download scheduling method
