@@ -7,7 +7,7 @@ Download CAEN and LSA-ISS Lecture recordings. Boosted.
 * **Concurrent download** !!
 * Directly search lecture without copy/pasting url
 * Concurrency and destination folder are configurable
-* Python 3 support
+* Python 3 and Pip support
 
 ## Updates
 * Major code rewritten, pretty much everything
