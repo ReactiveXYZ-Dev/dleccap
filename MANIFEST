@@ -2,11 +2,13 @@
 setup.py
 bin/leccap
 leccap/__init__.py
+leccap/actions.py
 leccap/auth.py
 leccap/config.json
 leccap/config.py
 leccap/constants.py
 leccap/download.py
+leccap/finder.py
 leccap/leccap.py
 leccap/tests.py
 leccap/utils.py

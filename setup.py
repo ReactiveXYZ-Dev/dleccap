@@ -3,7 +3,7 @@ from distutils.core import setup
 # setup(
 #     name='leccap-test',
 #     packages=['leccap'],
-#     version='0.0.5',
+#     version='0.0.6',
 #     description='Umich lecture downloader',
 #     author='Jackie Zhang',
 #     author_email='jackierw@umich.edu',
@@ -15,13 +15,14 @@ from distutils.core import setup
 #     package_data={
 #         'leccap': ['*.json'],
 #     },
-#     install_requires=['requests', 'wget', 'colorama', 'future']
+#     install_requires=['requests', 'wget', 'colorama', 'future', 'bs4']
 # )
 
+# PROD Package
 setup(
     name='leccap',
     packages=['leccap'],
-    version='0.0.5',
+    version='0.0.6',
     description='Umich lecture downloader',
     author='Jackie Zhang',
     author_email='jackierw@umich.edu',
@@ -32,5 +33,5 @@ setup(
     package_data={
         'leccap': ['*.json'],
     },
-    install_requires=['requests', 'wget', 'colorama', 'future']
+    install_requires=['requests', 'wget', 'colorama', 'future', 'bs4']
 )
