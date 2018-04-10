@@ -3,8 +3,9 @@ Download CAEN and LSA-ISS Lecture recordings. Boosted.
 
 **Credits to [Maxim Aleska](https://github.com/maxim123/dleccap) for his great work :)**
 
-## New features
+## New features (based on Maxim's version)
 * **Concurrent download** !!
+* Directly search lecture without copy/pasting url
 * Concurrency and destination folder are configurable
 * Python 3 support
 
@@ -71,7 +72,7 @@ where `$key` can be any one of :
 `all` (everything, for **reset only**)
  
  ### Development
- Please post a issue or pull request if you see bugs :)
+ Please post a issue or pull request if you see bugs or have any suggestions :)
 
  #### TODOs
  * Better download scheduling method
