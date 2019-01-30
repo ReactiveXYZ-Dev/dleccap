@@ -13,6 +13,20 @@ from .constants import *
 Lecture authentication procedures
 
 @Version 2.0.0
+
+New authenticator scheme:
+Construct session:
+
+- POST api-d9c5afcf.duosecurity.com/frame/web/v1/auth with tx/parent/v for sid(extracted from html)
+- GET login page for cosign cookie
+- POST /frame/prompt with sid/device/factor for txid
+- POST /frame/status with sid/txid for sending status
+- POST /frame/status with sid/txid for result url
+- POST /frame/status/Result_URL for cookie
+- POST /cosign-bin/cosign.cgi with required:mtoken and duo_sig_response:cookie
+- (Authenticated) cosign-weblogin cookie should exist now
+
+
 """
 class Authenticator(object):
 
@@ -86,4 +100,5 @@ class Authenticator(object):
             "login": self._username,
             "password": self._password
         })
+
 

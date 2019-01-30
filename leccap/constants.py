@@ -7,3 +7,4 @@ API_BASE_URL = "https://leccap.engin.umich.edu/leccap/viewer/api/recordings/"
 DEFAULT_CONCURRENCY = 5
 DEFAULT_MSG = ""
 DEFAULT_DIR = "."
+DEFAULT_PREFERRED = ""

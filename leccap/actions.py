@@ -9,6 +9,19 @@ from .auth import Authenticator
 from .config import ConfigParser
 from .download import Downloader
 
+def _create_authenticator():
+    auth = Authenticator()
+    # check for saved credentials
+    username = config.get('logins.username')
+    password = config.get('logins.password')
+    if username and password:
+        print_info("Using saved credentials...")
+        auth.ask_for_credentials(username=username, password=password)
+    else:
+        print_warning("Needs authentication. But you can save your credentials using ./leccap config! ")
+        auth.ask_for_credentials()
+    return auth
+
 def download(config, url, auth=None):
     # extract dest path
     dest_path = config.get('dest_path')
@@ -21,16 +34,7 @@ def download(config, url, auth=None):
     # check authentication
     if downloader.requires_auth():
         if auth is None:
-            auth = Authenticator()
-            # check for saved credentials
-            username = config.get('logins.username')
-            password = config.get('logins.password')
-            if username and password:
-                print_info("Using saved credentials...")
-                auth.ask_for_credentials(username=username, password=password)
-            else:
-                print_warning("Needs authentication. But you can save your credentials using ./leccap config! ")
-                auth.ask_for_credentials()
+            auth = _create_authenticator()
         downloader.set_auth(auth)
         if not downloader.get_auth().is_authenticated():
             print_info("Authenticating...")
@@ -41,16 +45,7 @@ def download(config, url, auth=None):
 def search(config, subject, year=None):
     finder = Finder()
     if finder.requires_auth():
-        auth = Authenticator()
-        # check for saved credentials
-        username = config.get('logins.username')
-        password = config.get('logins.password')
-        if username and password:
-            print_info("Using saved credentials...")
-            auth.ask_for_credentials(username=username, password=password)
-        else:
-            print_warning("Needs authentication. But you can save your credentials using ./leccap config! ")
-            auth.ask_for_credentials()
+        auth = _create_authenticator()
         finder.set_auth(auth)
         if not finder.get_auth().is_authenticated():
             print_info("Authenticating...")
@@ -65,12 +60,12 @@ def search(config, subject, year=None):
 def reset_config(config, key):
     if key == 'all':
         # reset all
-        config.set('logins', {'username': DEFAULT_MSG, 'password': DEFAULT_MSG})
+        config.set('logins', {'username': DEFAULT_MSG, 'password': DEFAULT_MSG, 'preferred': DEFAULT_MSG})
         config.set('concurrency', DEFAULT_CONCURRENCY)
         config.set('dest_path', DEFAULT_DIR)
     else:
         # reset parts
-        if key == 'logins.username' or key == 'logins.password':
+        if key in ['logins.username', 'logins.password', 'logins.preferred']:
             config.set(key, DEFAULT_MSG)
         elif key == 'concurrency':
             config.set(key, DEFAULT_CONCURRENCY)

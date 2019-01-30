@@ -12,7 +12,8 @@ University Of Michigan Lecture Videos Downloader
 @Version: 2.0.0
 
 Usage: 
-leccap dl url
+leccap dl [$url]
+leccap search [$subject] [$year]
 leccap reset [logins|path|concurrency|all]
 leccap config [login.username|login.password|concurrency] [$value]
 """
