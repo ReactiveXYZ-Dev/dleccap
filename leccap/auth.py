@@ -28,12 +28,11 @@ class Authenticator(object):
             username {str} -- Umich uniqname
             password {str} -- Uniqname password
         """
-        self._service_types = ["cosign-ctools", "cosign-shibboleth.umich.edu", "cosign-leccap.engin"]
         self._session = requests.Session()
         self._username = None
         self._password = None
     
-    def authenticate(self, service=None):
+    def authenticate(self, service="cosign-weblogin"):
         """
         Authenticating various umich services
         Credits to Maxim The Man
@@ -41,11 +40,12 @@ class Authenticator(object):
         Keyword Arguments:
             service {str} -- Service Type (default: {None})
         """
-        if not service:
-            for st in self._service_types:
-                self._authenticate_service(st)
-        else:
-            self._authenticate_service(service)
+        # try simple username-password auth
+        self._authenticate_service_simple(service)
+        if not self.is_authenticated():
+            # try 2fa
+            print_info("You seem to have 2fa enabled. Trying 2fa now...")
+            self._authenticate_service_2fa(service)
     
     def ask_for_credentials(self, username=None, password=None):
         """
@@ -67,8 +67,8 @@ class Authenticator(object):
         """
         Check whether the user has authenticated
         """
-        headers = self._session.get(AUTH_PAGE_URL).headers
-        return 'Set-Cookie' in headers and 'cosign=' in headers['Set-Cookie']
+        html = self._session.get(AUTH_PAGE_URL).text
+        return not ("login.html" in html or "login_error.html" in html)
 
     def session(self):
         """
@@ -79,34 +79,18 @@ class Authenticator(object):
     """
     Helpers
     """
-    # def _authenticate_service(self, service_type):
-    #     # load login page to get cookie
-    #     self._session.get(AUTH_PAGE_URL)
-    #     # post to login
-    #     self._session.post(AUTH_URL, {
-    #         "service": service_type,
-    #         "required": "",
-    #         "login": self._username,
-    #         "password": self._password
-    #     })
-    
-    """
-    New authentication scheme:
-    Construct session:
-
-    - GET login page for cosign session cookie
-    - POST https://weblogin.umich.edu/cosign-bin/cosign.cgi with login/password for sig_request(extracted from html) which is then splited into tx and APP
-    - POST api-d9c5afcf.duosecurity.com/frame/web/v1/auth with tx/parent/v for sid(extracted from html)
-    - POST /frame/prompt?sid=sid with sid/device/factor for txid
-    - POST /frame/status?sid=sid with sid/txid for sending status
-    - POST /frame/status?sid=sid with sid/txid for polling result url
-    - POST /frame/status/Result_URL for cookie
-    - POST /cosign-bin/cosign.cgi with required:mtoken and duo_sig_response:cookie+:+APP
-    - (Authenticated) cosign-weblogin cookie should exist now
-    """
-    def _authenticate_service(self, service_type):
-        # get session cookie
+    def _authenticate_service_simple(self, service_type):
+        # load login page to get cookie
         self._session.get(AUTH_PAGE_URL)
+        # post to login
+        self._session.post(AUTH_URL, {
+            "service": service_type,
+            "required": "",
+            "login": self._username,
+            "password": self._password
+        })
+
+    def _authenticate_service_2fa(self, service_type):
         # pass username/password check
         html = self._session.post(AUTH_URL, {
             "service": service_type,
@@ -126,8 +110,61 @@ class Authenticator(object):
                 )
             ).text
             # extract sid and 2fa methods
-            sid, devices, methods = self._extract_duo_2fa_details(html)
+            sid, device_methods = self._extract_duo_2fa_details(html)
+            # start a loop for the authentication process
+            duo_cookie = None
+            while not duo_cookie:
+                # request choice from user
+                device_name, factor = self._request_duo_2fa_choice(device_methods)
+                # construct data to send to Duo for 2fa action
+                action_data = {
+                    'device': device_name,
+                    'factor': factor
+                }
+                if factor == 'Passcode':
+                    passcode = self._request_duo_2fa_passcode()
+                    action_data['passcode'] = passcode
+                # send to duo for txid
+                prompt_res = self._session.post(
+                    "https://%s/frame/prompt?%s" % (host, urllib.parse.urlencode({ 'sid': sid })),
+                    data = action_data
+                ).json() 
+                if prompt_res['stat'] != 'OK':
+                    print_error("Failed to send 2fa request. Please try again.")
+                    continue
+                txid = prompt_res['response']['txid']
+                # 1st status check
+                auth_status = self._session.post(
+                    "https://%s/frame/status?%s" % (host, urllib.parse.urlencode({ 'sid': sid })),
+                    data = {'txid': txid }
+                ).json()
+                if auth_status['stat'] != 'OK':
+                    print_error("Failed to check status for 2fa request. Please try again.")
+                    continue
+                # 2nd status check (should block until succeeded)
+                auth_status = self._session.post(
+                    "https://%s/frame/status?%s" % (host, urllib.parse.urlencode({ 'sid': sid })),
+                    data = {'txid': txid }
+                ).json()
+                if auth_status['stat'] != 'OK' or auth_status['response']['result'] != 'SUCCESS':
+                    print_error("2fa failed with reason (%s). Please try again." % auth_status['response']['reason'])
+                    continue
+                # otherwise, authentication succeeded
+                result_url = auth_status['response']['result_url']
+                result_status = self._session.post(
+                    "https://%s%s?%s" % (host, result_url, urllib.parse.urlencode({ 'sid': sid }))
+                ).json()
+                if result_status['stat'] != 'OK':
+                    print_error("Unexpected error happened when retrieving cookie. Please try again.")
+                    continue
+                # get the cookie
+                duo_cookie = result_status['response']['cookie']
+                redirect_url = result_status['response']['parent']
             
+            # send a final request to weblogin to complete authentication
+            validation_data = { 'required': "mtoken" }
+            validation_data[post_arg] = duo_cookie + ':' + app
+            self._session.post(AUTH_URL, data=validation_data)
 
         except Exception as e:
             print_error(str(e))
@@ -141,7 +178,7 @@ class Authenticator(object):
     def _match_duo_config(self, html, key):
         result = re.search("'%s':\s*'[^']+'" % key, html)
         if not result:
-            raise Error("Could not find Duo Info. Maybe username/password is wrong?")
+            raise Exception("Could not find Duo Info. Maybe username/password is wrong?")
         content = result[0]
         value = content.replace("'", "").split()[1]
         if key == 'sig_request':
@@ -151,11 +188,46 @@ class Authenticator(object):
 
     def _extract_duo_2fa_details(self, html):
         html = BeautifulSoup(html, 'html.parser')
-        # find sid input
-        sid_input = html.find(attrs={"name": "sid"})
-        # find devices inputs
-        device_methods = html.find_all(lambda tag : tag.has_attr('data-device-index'))
-        print(device_methods)
-        # find methods inputs
+        try:
+            # find sid input
+            sid_input = html.find(attrs={"name": "sid"})
+            sid = sid_input['value']
+            # find devices inputs
+            input_section = html.find_all(lambda tag : tag.has_attr('data-device-index'))
+            # extract tokens
+            device_methods = []
+            for fieldset in input_section:
+                method = {
+                    "device_name": fieldset['data-device-index'],
+                    "factors": []
+                }
+                for div in fieldset.find_all('div', "row-label"):
+                    factor_input = div.find("input", attrs={"name": "factor"})
+                    method['factors'].append(factor_input['value'])
+                device_methods.append(method)
+            return sid, device_methods
+        except Exception as e:
+            raise Exception("Cannot find duo details. Maybe the protocol has changed. Report to developer ASAP. (err msg) %s " % e)
+    
+    def _request_duo_2fa_choice(self, device_methods):
+        print_info("You have the following 2fa options: ")
+        for idx, method in enumerate(device_methods):
+            print_info("Device: %s (%s)" % (method['device_name'], idx+1) )
+            for idx2, factor in enumerate(method['factors']):
+                print_info("\tAction: %s (%s)" % (factor, idx2+1))
+        result = input("Please choose your device and action (e.g. enter 1,1 to pick the 1st device for its 1st action): ")
+        device_id, method_id = result.split(',')
+        try:
+            device = device_methods[int(device_id)-1]
+            device_name = device['device_name']
+            factor = device['factors'][int(method_id)-1]
+            return device_name, factor
+        except Exception as e:
+            print(e)
+            raise Exception("Please choose a valid option")
+    
+    def _request_duo_2fa_passcode(self):
+        passcode = input("You have selected the passcode option. Please enter your passcode: ")
+        return passcode
 
 

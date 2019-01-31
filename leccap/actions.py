@@ -9,7 +9,7 @@ from .auth import Authenticator
 from .config import ConfigParser
 from .download import Downloader
 
-def _create_authenticator():
+def _create_authenticator(config):
     auth = Authenticator()
     # check for saved credentials
     username = config.get('logins.username')
@@ -34,7 +34,7 @@ def download(config, url, auth=None):
     # check authentication
     if downloader.requires_auth():
         if auth is None:
-            auth = _create_authenticator()
+            auth = _create_authenticator(config)
         downloader.set_auth(auth)
         if not downloader.get_auth().is_authenticated():
             print_info("Authenticating...")
@@ -45,7 +45,7 @@ def download(config, url, auth=None):
 def search(config, subject, year=None):
     finder = Finder()
     if finder.requires_auth():
-        auth = _create_authenticator()
+        auth = _create_authenticator(config)
         finder.set_auth(auth)
         if not finder.get_auth().is_authenticated():
             print_info("Authenticating...")
