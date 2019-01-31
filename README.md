@@ -1,5 +1,3 @@
-**(This version does not support the new Duo 2fa protocol. Stay tuned for the new version.)**
-
 # leccap
 Download CAEN and LSA-ISS Lecture recordings. Boosted.
 
