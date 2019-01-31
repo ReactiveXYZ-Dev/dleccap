@@ -60,12 +60,12 @@ def search(config, subject, year=None):
 def reset_config(config, key):
     if key == 'all':
         # reset all
-        config.set('logins', {'username': DEFAULT_MSG, 'password': DEFAULT_MSG, 'preferred': DEFAULT_MSG})
+        config.set('logins', {'username': DEFAULT_MSG, 'password': DEFAULT_MSG})
         config.set('concurrency', DEFAULT_CONCURRENCY)
         config.set('dest_path', DEFAULT_DIR)
     else:
         # reset parts
-        if key in ['logins.username', 'logins.password', 'logins.preferred']:
+        if key in ['logins.username', 'logins.password']:
             config.set(key, DEFAULT_MSG)
         elif key == 'concurrency':
             config.set(key, DEFAULT_CONCURRENCY)

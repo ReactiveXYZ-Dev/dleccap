@@ -4,12 +4,14 @@ Download CAEN and LSA-ISS Lecture recordings. Boosted.
 **Credits to [Maxim Aleska](https://github.com/maxim123/dleccap) for his great work :)**
 
 ## New features
-* **Concurrent download** !!
-* Concurrency and destination folder are configurable
+* **Duo 2fa Support** !!
+* **Concurrent download** !
+* configurable concurrency and destination folder 
 * Python 3 support
 
 ## Updates
-* Major code rewritten, pretty much everything
+* Support 2fa
+* Major code rewritten.
 * Got rid of some unnecessary dependencies
 
 ## Installation
