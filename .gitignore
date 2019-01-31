@@ -69,3 +69,6 @@ target/
 
 # backups
 *.bak
+
+# tmp 
+tmp.py

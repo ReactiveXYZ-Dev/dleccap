@@ -3,7 +3,7 @@ from distutils.core import setup
 # setup(
 #     name='leccap-test',
 #     packages=['leccap'],
-#     version='0.0.6',
+#     version='0.0.7',
 #     description='Umich lecture downloader',
 #     author='Jackie Zhang',
 #     author_email='jackierw@umich.edu',
@@ -22,7 +22,7 @@ from distutils.core import setup
 setup(
     name='leccap',
     packages=['leccap'],
-    version='0.0.6',
+    version='0.0.8',
     description='Umich lecture downloader',
     author='Jackie Zhang',
     author_email='jackierw@umich.edu',

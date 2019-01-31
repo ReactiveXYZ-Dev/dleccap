@@ -175,7 +175,7 @@ class Downloader(object):
             elif self._is_site_url(self._url):
                 self._download_site()
             else:
-                print_error("The URL you entered it not valid!")
+                raise Error("The URL you entered it not valid!")
         except Exception as e:
            print_error(e.message)
            print_warning("This is probably because of wrong credentials.")
@@ -209,7 +209,9 @@ class Downloader(object):
             print("%i\t(%s)\t%s" % (
                 idx + 1, recording["date"], recording["title"]))
         # prompt user to select
-        prompt = print_info("Please select one or more comma separated, e.g 1,3,5. Or simply enter to download all of them: ", True)
+        prompt = print_info(
+            "Please select one or more videos with comma separated, e.g 1,3,5. Or simply enter to download all of them: ", True
+        )
         ans = input(prompt)
         if ans == '':
             to_dl = recordings
