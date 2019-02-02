@@ -49,7 +49,7 @@ where url is in form of either:
 https://leccap.engin.umich.edu/leccap/site/XXX to download multiple recordings from a course site or
 https://leccap.engin.umich.edu/leccap/viewer/r/XXX to download a single recording
 
-**Removed canvas/ctools support since they seems deprecated, if you want to have those, shoot me an email :)**
+**Removed canvas/ctools support since they seem deprecated, if you want to have those, shoot me an email :)**
 
 #### Configuration
 ##### Update config
